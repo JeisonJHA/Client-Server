@@ -6,6 +6,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import static Application.TipoPessoa.*;
+
 /**
  * Created by nosiej on 24/08/2016.
  */
@@ -14,6 +16,8 @@ class MainForm extends JFrame {
     private JMenuItem sair;
     private JMenuItem conta;
     private JMenuItem correntista;
+    private JMenuItem pessoaFisica;
+    private JMenuItem pessoaJuridica;
     private JMenuItem agencia;
 
     private void Configura() {
@@ -31,6 +35,8 @@ class MainForm extends JFrame {
         }
         this.PreparaMenu();
         getSair().addActionListener(new Sair(this));
+        getPessoaFisica().addActionListener(new Conta(Fisica));
+        getPessoaJuridica().addActionListener(new Conta(Juridica));
     }
 
     private void PreparaMenu(){
@@ -49,10 +55,15 @@ class MainForm extends JFrame {
 
         setAgencia(new JMenuItem("Agência"));
         cadastro.add(getAgencia());
-        setCorrentista(new JMenuItem("Correntista"));
+        setCorrentista(new JMenu("Correntista"));
         cadastro.add(getCorrentista());
         setConta(new JMenuItem("Conta"));
         cadastro.add(getConta());
+
+        setPessoaFisica(new JMenuItem("Pessoa Física"));
+        setPessoaJuridica(new JMenuItem("Pessoa Jurídica"));
+        getCorrentista().add(getPessoaFisica());
+        getCorrentista().add(getPessoaJuridica());
     }
 
     private JMenuItem getSair() {
@@ -87,6 +98,22 @@ class MainForm extends JFrame {
         this.agencia = agencia;
     }
 
+    public JMenuItem getPessoaFisica() {
+        return pessoaFisica;
+    }
+
+    public void setPessoaFisica(JMenuItem pessoaFisica) {
+        this.pessoaFisica = pessoaFisica;
+    }
+
+    public JMenuItem getPessoaJuridica() {
+        return pessoaJuridica;
+    }
+
+    public void setPessoaJuridica(JMenuItem pessoaJuridica) {
+        this.pessoaJuridica = pessoaJuridica;
+    }
+
     private class Sair implements ActionListener {
 
         private MainForm tela;
@@ -98,19 +125,27 @@ class MainForm extends JFrame {
         public void actionPerformed(ActionEvent e) {
             tela.setVisible(false);
             Runtime.getRuntime().exit(0);
-
         }
-
     }
 
     private class Conta implements ActionListener {
+        private TipoPessoa tipoPessoa;
+
+        Conta(TipoPessoa t){
+            tipoPessoa = t;
+        }
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            TelaCadastroConta Conta = new TelaCadastroConta();
-            Conta.setVisible(true);
+            if (Fisica == tipoPessoa) {
+                TelaCadastroPessFisica conta = new TelaCadastroPessFisica();
+                conta.setVisible(true);
+            }
+            else if (Juridica == tipoPessoa){
+                TelaCadastroPessJuridica conta = new TelaCadastroPessJuridica();
+                conta.setVisible(true);
+            }
         }
-
     }
 
     MainForm(){
